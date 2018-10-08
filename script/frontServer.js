@@ -7,7 +7,6 @@
 
 const path = require('path');
 const localSetting = require('./setting.local');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const baseDir = path.resolve(__dirname, '..');
 const port = localSetting.front.port || 8007;
@@ -29,23 +28,12 @@ const front = require('gap-node-front')({
         },
         alias: {},
         modules: [
-            'node_modules'
+            'node_modules',
+            'src/lib'
         ],
         entry: {
-            main: './main.js',
-            'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-            'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
-            'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
-            'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
-            'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker',
+            main: './main.js'
         },
-        rules: [{
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
-        }],
-        plugins: [
-            new MonacoWebpackPlugin()
-        ]
     }
 });
 
