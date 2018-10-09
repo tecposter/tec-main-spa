@@ -9,6 +9,7 @@ export class MonacoEditor {
         this.jses = [];
         this.jsCallbacks = [];
         this.content = content || DefaultContent;
+        document.title = this.extractTitle(this.content);
 
         this.isChanged = false;
         this.isPreviewBlocked = false;
