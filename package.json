@@ -35,6 +35,7 @@
     "lint"
   ],
   "dependencies": {
+    "gap-front-mask": "^4.2.3",
     "gap-front-request": "^2.0.0",
     "gap-front-view": "^3.0.10",
     "gap-front-web": "^1.2.15"

@@ -1,6 +1,6 @@
 const Mode = {
     normal: 'normal',
-    insert: 'insert'
+    edit: 'edit'
 };
 
 const KeyMap = {
@@ -107,9 +107,22 @@ export class CmdManager {
         return arr;
     }
 
-    register(inModes, cmd, desc, fun, inShortKeys) {
+    _parseCmd(inCmd) {
+        let cmd, desc;
+        const pos = inCmd.indexOf(':');
+        if (pos > 0) {
+            cmd = inCmd.substr(0, pos);
+            desc = inCmd.substr(pos + 1).trim();
+        } else {
+            cmd = inCmd.trim();
+        }
+        return [cmd, desc];
+    }
+
+    register(inModes, inCmd, inShortKeys, fun) {
         const modes = this._argToArr(inModes);
         const shortKeys = this._argToArr(inShortKeys);
+        const [cmd, desc] = this._parseCmd(inCmd);
 
         modes.forEach(mode => {
             this.addCmd(mode, cmd, desc, fun);
