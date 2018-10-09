@@ -80,6 +80,12 @@ export class MonacoEditor {
 
     }
 
+    saved() {
+        document.title = this.extractTitle(this.getContent());
+        this.isChanged = false;
+        this.isPreviewBlocked = false;
+    }
+
     extractTitle(content) {
         const matched = /# ([^#\n]+)/.exec(content);
         if (matched) {
