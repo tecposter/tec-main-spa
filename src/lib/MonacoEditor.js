@@ -48,10 +48,26 @@ export class MonacoEditor {
             const srcMax = lineCount - (visibleRange.endLineNumber - visibleRange.startLineNumber);
             this.previewWrap.scrollTop = (this.previewWrap.scrollHeight - this.previewWrap.offsetHeight) * visibleRange.startLineNumber / srcMax;
         });
+
+        window.onbeforeunload = (evt) => {
+            if (!this.isChanged) {
+                return;
+            }
+
+            evt.stop();
+            evt.cancel();
+            (evt || window.event).returnValue = null;
+            return null;
+        };
+
     }
 
     appendTo(ctnElem) {
         ctnElem.appendChild(this.editorWrap);
+    }
+
+    getContent() {
+        return this.codeEditor.getValue();
     }
 
     setContent(content) {

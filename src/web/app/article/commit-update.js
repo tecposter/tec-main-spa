@@ -1,5 +1,6 @@
 import {MonacoEditor} from 'MonacoEditor';
 import {CtrlPanel} from 'CtrlPanel';
+//import {CmdManager} from 'CmdManager';
 import {oneElem} from 'web-util';
 
 export default async core => {
@@ -14,4 +15,21 @@ export default async core => {
 
     editor.appendTo(pageElem);
     ctrlPanel.appendTo(pageElem);
+
+    /*
+    const cmdManager = new CmdManager();
+    cmdManager.register(
+        CmdManager.Mode.normal,
+        'update',
+        'Update article commit',
+        () => updateArticleCommit(editor),
+        ['meta-s', 'ctrl-s', 'alt-s']
+    );
+    */
 };
+
+/*
+const updateArticleCommit = (editor) => {
+    console.log(editor.getContent());
+};
+*/
