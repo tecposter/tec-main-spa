@@ -71,6 +71,10 @@ export class MonacoEditor {
         return this.codeEditor.getValue();
     }
 
+    getTitle() {
+        return this.extractTitle(this.getContent());
+    }
+
     setContent(content) {
         this.isPreviewBlocked = true;
         this.codeEditor.setValue(content);
@@ -82,7 +86,7 @@ export class MonacoEditor {
     }
 
     saved() {
-        document.title = this.extractTitle(this.getContent());
+        document.title = this.getTitle();
         this.isChanged = false;
         this.isPreviewBlocked = false;
     }

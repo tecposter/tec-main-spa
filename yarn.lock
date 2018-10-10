@@ -2907,11 +2907,11 @@ gap-front-form@^1.0.0:
   integrity sha1-l349mP0WxZuN1ZssfTnUbczcPOA=
 
 gap-front-mask@^4.2.3:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/gap-front-mask/-/gap-front-mask-4.2.5.tgz#8b946fa52d95a3b3af9eb2f5c0312c79b50c2ade"
-  integrity sha512-ExsqmAYSaIU5lIAwwW9Khw0Z4D68khoj3ndgYKtWggdw9bwPO8c3rX3G5Ua7eg37dgFahtOxuJVfhGoxDM1H/Q==
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/gap-front-mask/-/gap-front-mask-4.2.7.tgz#c8d5e0cb65a2e23d1f50dbec9b61e333eeac3bb3"
+  integrity sha512-hrJRCE0JsTKhrb3dMEcM3N09YopIYCcfk+Eafei8B0vNcA6ILcwdn9H3Em8RCZaIoMaEcs+mD4hJB9SfOmqHvA==
   dependencies:
-    gap-front-view "^2.4.5"
+    gap-front-view "^3.0.10"
     gap-front-web "^1.2.11"
 
 gap-front-request@^2.0.0:
@@ -2920,14 +2920,6 @@ gap-front-request@^2.0.0:
   integrity sha1-R9knA4qOt0SNwChtYzTBDqbDNnw=
   dependencies:
     gap-front-form "^1.0.0"
-
-gap-front-view@^2.4.5:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-2.8.1.tgz#4f1537252bdfa442a1c52c409e0bded03e8cb2b2"
-  integrity sha1-TxU3JSvfpEKhxSxAngve0D6MsrI=
-  dependencies:
-    gap-front-event "^2.0.0"
-    gap-front-web "^1.2.11"
 
 gap-front-view@^3.0.10:
   version "3.0.10"

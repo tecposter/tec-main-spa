@@ -34,22 +34,22 @@ const KeyMap = {
 
 export class CmdManager {
     constructor() {
-        this.currentMode = Mode.normal;
+        this.mode = Mode.normal;
         this.cmds = {};
         this.shortKeys = {};
 
         document.on('keydown', async evt => {
-            if (!this.cmds[this.currentMode]) {
+            if (!this.cmds[this.mode]) {
                 return;
             }
 
             const shortKey = this.parseShortKey(evt);
-            const cmd = this.shortKeys[this.currentMode][shortKey];
+            const cmd = this.shortKeys[this.mode][shortKey];
             if (!cmd) {
                 return;
             }
 
-            const cmdObj = this.cmds[this.currentMode][cmd];
+            const cmdObj = this.cmds[this.mode][cmd];
             if (!cmdObj) {
                 return;
             }
@@ -92,7 +92,7 @@ export class CmdManager {
     }
 
     setMode(mode) {
-        this.currentMode = mode;
+        this.mode = mode;
     }
 
     _argToArr(arg) {
@@ -119,23 +119,34 @@ export class CmdManager {
         return [cmd, desc];
     }
 
-    register(inModes, inCmd, inShortKeys, fun) {
-        const modes = this._argToArr(inModes);
+    register(inCmd, inShortKeys, fun, inModes) {
+        const modes = this._argToArr(inModes || this.mode);
         const shortKeys = this._argToArr(inShortKeys);
         const [cmd, desc] = this._parseCmd(inCmd);
 
         modes.forEach(mode => {
-            this.addCmd(mode, cmd, desc, fun);
+            this.addCmd(mode, cmd, desc, fun, shortKeys);
             shortKeys.forEach(shortKey => this.addShortKey(mode, shortKey, cmd));
         });
     }
 
-    addCmd(mode, cmd, desc, fun) {
+    trigger(cmd) {
+        const cmdSet = this.getCmdSet(this.mode);
+        if (!cmdSet.hasOwnProperty(cmd)) {
+            console.warn(`cannot find cmd: ${this.mode} - ${cmd}`); // eslint-disable-line no-console
+            return;
+            //throw new Error(`Cannot find cmd: ${this.mode} - ${cmd}`);
+        }
+        const cmdObj = cmdSet[cmd];
+        cmdObj.fun.apply(null);
+    }
+
+    addCmd(mode, cmd, desc, fun, shortKeys) {
         const cmdSet = this.getCmdSet(mode);
         if (cmdSet.hasOwnProperty(cmd)) {
             throw new Error(`duplicated cmd: ${mode} - ${cmd}`);
         }
-        cmdSet[cmd] = {desc, fun};
+        cmdSet[cmd] = {desc, fun, shortKeys};
     }
 
     addShortKey(mode, shortKey, cmd) {
