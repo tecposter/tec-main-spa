@@ -18,6 +18,8 @@ const MonacoRes = {
         'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.14.3/min/vs/editor/editor.main.js',
     ]
 };
+const MonacoBaseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.14.3/min/';
+const MonacoWorkerMainUrl = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.14.3/min/vs/base/worker/workerMain.js';
 
 export class Coder {
     constructor(ctnElem, content) {
@@ -99,6 +101,18 @@ export class Coder {
 
         await this.asLoadJs(scriptElem);
         await this.asLoadRes(MonacoRes);
+
+        // https://github.com/Microsoft/monaco-editor/blob/master/docs/integrate-amd-cross.md
+        window.MonacoEnvironment = {
+            getWorkerUrl: function() {
+                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                    self.MonacoEnvironment = {
+                        baseUrl: '${MonacoBaseUrl}'
+                    };
+                    importScripts('${MonacoWorkerMainUrl}');`
+                )}`;
+            }
+        };
         return window.monaco;
     }
     
