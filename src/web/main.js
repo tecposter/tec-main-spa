@@ -1,8 +1,8 @@
-import {ready} from 'gap-front-web';
+import {ready} from 'gap/web';
+import {deepMerge} from 'obj/deepMerge';
+import {WebCore} from 'WebCore';
 import {setting} from './setting/setting';
 import {localSetting} from './setting/setting.local';
-import {WebCore} from 'WebCore';
-import {deepMerge} from 'deepMerge';
 
 const webCore = new WebCore(
     deepMerge(

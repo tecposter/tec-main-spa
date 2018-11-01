@@ -1,4 +1,4 @@
-import {View} from 'View';
+import {View} from 'gap/View';
 
 export class FloatWrapView extends View {
     template() {

@@ -60,6 +60,36 @@ export class CmdManager {
         });
     }
 
+    setMode(mode) {
+        this.mode = mode;
+    }
+
+    register(inCmd, inShortKeys, fun, inModes) {
+        const modes = this._argToArr(inModes || this.mode);
+        const shortKeys = this._argToArr(inShortKeys);
+        const [cmd, desc] = this._parseCmd(inCmd);
+
+        modes.forEach(mode => {
+            this.addCmd(mode, cmd, desc, fun, shortKeys);
+            shortKeys.forEach(shortKey => this.addShortKey(mode, shortKey, cmd));
+        });
+    }
+
+    trigger(cmd) {
+        const cmdSet = this.getCmdSet(this.mode);
+        if (!cmdSet.hasOwnProperty(cmd)) {
+            console.warn(`cannot find cmd: ${this.mode} - ${cmd}`); // eslint-disable-line no-console
+            return;
+            //throw new Error(`Cannot find cmd: ${this.mode} - ${cmd}`);
+        }
+        const cmdObj = cmdSet[cmd];
+        cmdObj.fun.apply(null);
+    }
+
+    //
+    // ---
+    //
+
     parseShortKey(evt) {
         let prefixs = [];
         if (evt.ctrlKey) {
@@ -91,10 +121,6 @@ export class CmdManager {
         return shortKey;
     }
 
-    setMode(mode) {
-        this.mode = mode;
-    }
-
     _argToArr(arg) {
         let arr;
         if (Array.isArray(arg)) {
@@ -117,28 +143,6 @@ export class CmdManager {
             cmd = inCmd.trim();
         }
         return [cmd, desc];
-    }
-
-    register(inCmd, inShortKeys, fun, inModes) {
-        const modes = this._argToArr(inModes || this.mode);
-        const shortKeys = this._argToArr(inShortKeys);
-        const [cmd, desc] = this._parseCmd(inCmd);
-
-        modes.forEach(mode => {
-            this.addCmd(mode, cmd, desc, fun, shortKeys);
-            shortKeys.forEach(shortKey => this.addShortKey(mode, shortKey, cmd));
-        });
-    }
-
-    trigger(cmd) {
-        const cmdSet = this.getCmdSet(this.mode);
-        if (!cmdSet.hasOwnProperty(cmd)) {
-            console.warn(`cannot find cmd: ${this.mode} - ${cmd}`); // eslint-disable-line no-console
-            return;
-            //throw new Error(`Cannot find cmd: ${this.mode} - ${cmd}`);
-        }
-        const cmdObj = cmdSet[cmd];
-        cmdObj.fun.apply(null);
     }
 
     addCmd(mode, cmd, desc, fun, shortKeys) {

@@ -1,10 +1,14 @@
-import {Request as GapRequest} from 'gap-front-request';
-import {WebCache} from 'WebCache';
+import {Request as GapRequest} from 'gap/Request';
+import {SessionStorage} from 'storage/SessionStorage';
+
+const RouteDict = {
+    identityAccess: 'identity-access'
+};
 
 export class WebCore {
     constructor(setting) {
         this.setting = setting;
-        this.cache = new WebCache();
+        this.cache = new SessionStorage();
     }
 
     async apiPostJson(appCode, routeName, params) {
@@ -27,11 +31,11 @@ export class WebCore {
             return cachedAccessToken;
         }
         
-        const accessByIdTokenUrl = await this.asGetUrl(appCode, 'accessByIdToken');
+        const identityAccessUrl = await this.asGetUrl(appCode, RouteDict.identityAccess);
         const request = this.createAppRequest();
         // send cookies with request
         request.withCredentials = true;
-        const remoteAccessToken = await request.postJson(accessByIdTokenUrl, {appCode});
+        const remoteAccessToken = await request.postJson(identityAccessUrl);
         this.cache.set(cacheKey, remoteAccessToken);
         return remoteAccessToken;
     }

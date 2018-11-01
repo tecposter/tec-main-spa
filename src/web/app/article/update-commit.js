@@ -1,18 +1,28 @@
-import {MonacoEditor} from 'MonacoEditor';
-import {CtrlPanel} from 'CtrlPanel';
+import {Mask} from 'gap/Mask';
+import {oneElem, createElem} from 'gap/web';
+
+import {Editor} from 'markdown/Editor';
 import {CmdManager} from 'CmdManager';
-import {CmdDialog} from 'CmdDialog';
-import {Mask} from 'Mask';
-import {Helper} from 'Helper';
-import {oneElem} from 'web-util';
+
+import {Helper} from 'component/Helper';
+import {CtrlPanel} from 'component/CtrlPanel';
+import {CmdDialog} from 'component/CmdDialog';
 
 import {PublishPopForm} from './popForm/PublishPopForm';
 
+/*
+const RouteDict = {
+    articleUpdateCommitContent: 'article-update-commit-content'
+};
+*/
+
 export default async core => {
     const pageElem = oneElem('.page');
-    const commitDto = core.setting.pageConfig.commitDto;
-    const articleDto = await asFetchArticleById(core, commitDto.articleId);
-    const editor = new MonacoEditor(commitDto.content);
+    const ctnElem = createElem('div');
+    pageElem.appendChild(ctnElem);
+
+    const commit = core.setting.pageConfig.commit;
+    const editor = new Editor(ctnElem, commit.content);
     const ctrlPanel = new CtrlPanel({
         menuItems: [
             {title: 'item1'},
@@ -28,24 +38,22 @@ export default async core => {
     publishPopForm.on('show', () => {
         publishPopForm.update({
             title: editor.getTitle(),
-            zcode: articleDto.zcode,
-            articleId: commitDto.articleId,
-            commitId: commitDto.commitId
+            slug: commit.slug,
+            code: commit.code
         });
     });
 
-    publishPopForm.on('submit', async (zcode, isPublic) => {
-        const articleId = commitDto.articleId;
-        const commitId = commitDto.commitId;
-
-        const res = await asPublishArticleCommit(core, articleId, commitId, zcode, isPublic);
+    /*
+    publishPopForm.on('submit', async (slug, isPublic) => {
+        const res = await asArticlePublish(core, commit.code, slug, isPublic);
         if (res && res.url) {
             window.location.href = res.url;
         }
     });
-    //const publishPopForm = createPublishPopForm(mask, editor, commitDto, articleDto);
+    */
+    //const publishPopForm = createPublishPopForm(mask, editor, commit, articleDto);
 
-    editor.appendTo(pageElem);
+    //editor.appendTo(pageElem);
     ctrlPanel.appendTo(pageElem);
 
     cmdManager.setMode(CmdManager.Mode.edit);
@@ -54,10 +62,12 @@ export default async core => {
         () => helper.show()
     );
 
+    /*
     cmdManager.register(
         'update: Update article commit', 'ctrl-s',
-        () => asUpdateArticleCommit(core, editor, commitDto)
+        () => asArticleUpdateCommitContent(core, editor, commit)
     );
+    */
 
     cmdManager.register(
         'esc', 'esc',
@@ -83,13 +93,18 @@ export default async core => {
     );
 };
 
-const asUpdateArticleCommit = async (core, editor, commitDto) => {
-    commitDto.content = editor.getContent();
-    await core.apiPostJson('main', 'updateArticleCommit', commitDto);
+/*
+const asArticleUpdateCommitContent = async (core, editor, code) => {
+    //commit.content = editor.getContent();
+    await core.apiPostJson(
+        'main',
+        RouteDict.articleUpdateCommitContent,
+        {code: code, content: editor.getContent}
+    );
     editor.saved();
 };
 
-const asPublishArticleCommit = async (core, articleId, commitId, zcode, isPublic) => {
+const asArticlePublish = async (core, articleId, commitId, zcode, isPublic) => {
     const res = await core.apiPostJson('main', 'publishArticleCommit', {
         articleId,
         zcode,
@@ -98,15 +113,16 @@ const asPublishArticleCommit = async (core, articleId, commitId, zcode, isPublic
     });
     return res;
 };
+*/
 
+/*
 const asFetchArticleById = async (core, articleId) => {
     const articleDto = await core.apiPostJson('main', 'fetchArticleById', {articleId});
     return articleDto;
 };
 
-/*
-const createPublishPopForm = (mask, editor, commitDto, articleDto) => {
-    const popForm = new PublishPopForm({mask, editor, commitDto, articleDto});
+const createPublishPopForm = (mask, editor, commit, articleDto) => {
+    const popForm = new PublishPopForm({mask, editor, commit, articleDto});
     return popForm;
 };
 */

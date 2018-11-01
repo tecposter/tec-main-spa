@@ -1,7 +1,7 @@
-import {oneElem} from 'web-util';
-import {MarkdownPreview} from 'MarkdownPreview';
+import {oneElem} from 'gap/web';
+import {Parser} from 'markdown/Parser';
 
 export default async () => {
-    const markdownPreview = new MarkdownPreview();
-    markdownPreview.preview(oneElem('.article-detail')); 
+    const parser = new Parser();
+    parser.asRenderElem(oneElem('.article-detail')); 
 };

@@ -1,6 +1,6 @@
-import {oneElem, createElem} from 'web-util';
+import {oneElem, createElem} from 'gap/web';
 
-export const appendCssLink = (href, attrs = {})  => {
+export const loadCss = (href, attrs = {})  => {
     const link = createElem('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';

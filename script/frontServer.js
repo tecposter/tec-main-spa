@@ -29,7 +29,9 @@ const front = require('gap-node-front')({
         alias: {},
         modules: [
             'node_modules',
-            'src/lib'
+            'src/lib',
+            'src/internal',
+            'src/third'
         ],
         entry: {
             main: './main.js'

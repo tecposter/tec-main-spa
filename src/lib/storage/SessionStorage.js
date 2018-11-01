@@ -1,6 +1,6 @@
 const prefix = '@tec-';
 
-export class WebCache {
+export class SessionStorage {
     get(key) {
         const cacheKey = this.getCacheKey(key);
         const res = window.sessionStorage.getItem(cacheKey);

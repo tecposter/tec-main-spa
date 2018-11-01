@@ -1,4 +1,4 @@
-import {Pop} from 'Pop';
+import {Pop} from 'gap/Pop';
 
 export class PublishPopForm extends Pop {
     template() {
