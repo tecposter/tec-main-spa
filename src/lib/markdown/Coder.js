@@ -46,7 +46,7 @@ export class Coder {
     }
 
     getLineCount() {
-        const monaco = this.getMonaco();
+        const monaco = this.getCodeEditor();
         if (!monaco) {
             return 0;
         }
@@ -54,7 +54,7 @@ export class Coder {
     }
 
     getVisibleRange() {
-        const monaco = this.getMonaco();
+        const monaco = this.getCodeEditor();
         if (!monaco) {
             return {
                 startLineNumber: 0,
