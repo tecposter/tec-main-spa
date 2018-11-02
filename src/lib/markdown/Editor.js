@@ -90,6 +90,7 @@ export class Editor {
         styleElem.innerHTML = `
             html, body, .page {
                 height: 100%;
+                overflow: hidden;
             }
         `;
         oneElem('head').appendChild(styleElem);
