@@ -2,21 +2,42 @@ import {createElem, oneElem} from 'gap/web';
 
 import {Coder} from './Coder';
 import {Parser} from './Parser';
+import {GapEvent} from 'gap/GapEvent';
+
+const DefaultContent = '# Title\n';
+const EventChange = 'change';
 
 export class Editor {
     constructor(ctnElem, content) {
         this.ctnElem = ctnElem;
-        this.content = content;
+        this.content = content || DefaultContent;
 
-        this.isPreviewBlocked = false;
-        this.isChanged = false;
+        this._isPreviewBlocked = false;
+        this._isChanged = false;
 
         this.buildCtn(this.ctnElem);
 
+        this.event = new GapEvent();
         this.parser = this.getParser();
         this.coder = this.getCoder();
 
         this.asStartup();
+    }
+
+    onChange(callback) {
+        this.event.on(EventChange, callback);
+    }
+
+    isChanged() {
+        return this._isChanged;
+    }
+
+    getTitle() {
+        return this.extractTitle(this.getContent());
+    }
+
+    getContent() {
+        return this.coder.getContent();
     }
 
     //
@@ -99,11 +120,12 @@ export class Editor {
         
         const coder = this.coder;
         coder.onChange(() => {
-            if (!this.isPreviewBlocked) {
+            if (!this._isPreviewBlocked) {
                 const codeContent = coder.getContent();
                 this.asPreview(codeContent);
-                this.isChanged = true;
-                document.title = '* ' + this.extractTitle(codeContent);
+                this._isChanged = true;
+                this.event.trigger(EventChange);
+                //document.title = '* ' + this.extractTitle(codeContent);
             }
         });
 
@@ -117,17 +139,6 @@ export class Editor {
 
             const previewWrap = this.getPreviewWrap();
             previewWrap.scrollTop = (previewWrap.scrollHeight - previewWrap.offsetHeight) * visible.startLineNumber / max;
-        });
-
-        window.on('beforeunload', evt => {
-            if (!this.isChanged) {
-                return;
-            }
-
-            evt.stop();
-            evt.cancel();
-            (evt || window.event).returnValue = null;
-            return null;
         });
     }
 

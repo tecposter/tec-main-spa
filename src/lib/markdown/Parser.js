@@ -34,8 +34,11 @@ const KatexRes = {
     ]
 };
 
+let ParserIndex = 0;
+
 export class Parser {
     constructor() {
+        this.id = ParserIndex++;
         this.asGetHljs();
         this.asGetKatex();
         this.asGetMarkdownIt();
@@ -43,19 +46,23 @@ export class Parser {
 
     async asToHtml(str) {
         const mdit = await this.asGetMdit();
-        const katex = await this.asGetKatex();
+        await this.asGetKatex();
 
         // https://github.com/goessner/markdown-it-texmath/blob/8c460feea79b4ee0153f674ee5450e59b85cc944/texmath.js
-        const mathBlockPattern = /(\${2})((?:\\.|[\s\S])*)\1/g;
         const mathInlinePattern = /\\\((.+?)\\\)/g;
 
         return mdit.render(str.trim())
             .replace(mathInlinePattern, (match, src) => {
-                return katex.renderToString(src);
-            })
-            .replace(mathBlockPattern, (match, tag, src) => {
-                return '<div>' + katex.renderToString(src) + '</div>';
+                return this.toMathHtml(src);
             });
+        /*
+         * keep
+         * block patter $$ $$ not work well
+        const mathBlockPattern = /(\${2})((?:\\.|[\s\S])*)\1/g;
+        .replace(mathBlockPattern, (match, tag, src) => {
+            return '<div>' + katex.renderToString(src, {throwOnError: false}) + '</div>';
+        });
+        */
     }
 
     async asRenderElem(elem) {
@@ -66,14 +73,25 @@ export class Parser {
     // private functions
     //
 
-    async asGetMdit() {
-        if (this._mdit) {
-            return this._mdit;
+    toMathHtml(str) {
+        const katex = this.getKatex();
+        if (!katex) {
+            return '';
         }
 
-        //await this.asLoadRes(HighlightRes);
+        try {
+            return katex.renderToString(str);
+        } catch (e) {
+            if (e instanceof katex.ParseError) {
+                return (`Error in LaTeX '${str}': ${e.message}`)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+        }
+    }
+
+    async asCreateMdit() {
         const hljs = await this.asGetHljs();
-        const katex = await this.asGetKatex();
+        await this.asGetKatex();
         const markdownit = await this.asGetMarkdownIt();
 
         const mdit = markdownit({
@@ -81,7 +99,7 @@ export class Parser {
                 const lang = inLang.toLowerCase().trim();
 
                 if (lang === 'math') {
-                    return katex.renderToString(str);
+                    return '<pre><code>' + this.toMathHtml(str) + '</code></pre>';
                 } else if (lang && hljs.getLanguage(lang)) {
                     try {
                         return '<pre class="hljs"><code>' +
@@ -94,7 +112,14 @@ export class Parser {
                 return '<pre class="hljs"><code>' + mdit.utils.escapeHtml(str) + '</code></pre>';
             }
         });
-        this._mdit = mdit;
+        return mdit;
+    }
+
+    async asGetMdit() {
+        if (this._mdit) {
+            return this._mdit;
+        }
+        this._mdit = await asSingleTon('gapParserMdit-' + this.id, this, 'asCreateMdit');
         return this._mdit;
     }
 
@@ -122,11 +147,19 @@ export class Parser {
     }
 
     async asGetKatex() {
-        return await asSingleTon('gapParserKatex', this, 'asCreateKatex');
+        if (this._katex) {
+            return this._katex;
+        }
+        this._katex = await asSingleTon('gapParserKatex', this, 'asCreateKatex');
+        return this._katex;
     }
 
     async asLoadRes(res) {
         await asLoadRes(res);
+    }
+
+    getKatex() {
+        return this._katex;
     }
 
     /*

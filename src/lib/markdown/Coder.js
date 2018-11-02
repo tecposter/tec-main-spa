@@ -20,13 +20,29 @@ const MonacoRes = {
 };
 const MonacoBaseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.14.3/min/';
 const MonacoWorkerMainUrl = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.14.3/min/vs/base/worker/workerMain.js';
+let CoderIndex = 0;
 
 export class Coder {
     constructor(ctnElem, content) {
         this.content = content || DefaultContent;
         this.ctnElem = ctnElem;
 
+        this.id = CoderIndex++;
+
         this.asGetMonaco();
+    }
+
+    onChange(callback) {
+        this.asOnChange(callback);
+    }
+
+    onScroll(callback) {
+        this.asOnScroll(callback);
+    }
+
+    getContent() {
+        const codeEditor = this.getCodeEditor();
+        return codeEditor ? codeEditor.getValue() : '';
     }
 
     getLineCount() {
@@ -48,41 +64,18 @@ export class Coder {
         return monaco.getVisibleRanges()[0];
     }
 
-    getContent() {
-        const monaco = this.getMonaco();
-        return monaco ? monaco.getValue() : '';
-    }
-
-    isLoaded() {
-        return this.getMonaco() ? true : false;
-    }
-
-    onChange(callback) {
-        this.asOnChange(callback);
-    }
-
-    onScroll(callback) {
-        this.asOnScroll(callback);
-    }
-
     //
     // private funs
     //
 
-    getMonaco() {
-        if (this._monaco) {
-            return this._monaco;
-        }
-        return null;
+    getCodeEditor() {
+        return this._codeEditor || null;
     }
 
-    async asGetCodeEditor() {
-        if (this._codeEditor) {
-            return this._codeEditor;
-        }
 
+    async asCreateCodeEditor() {
         const monaco = await this.asGetMonaco();
-        const codeEditor = monaco.editor.create(this.ctnElem, {
+        return monaco.editor.create(this.ctnElem, {
             value: this.content,
             language: 'markdown',
             wordWrap: 'wordWrapColumn',
@@ -90,7 +83,13 @@ export class Coder {
             wordWrapMinified: true,
             wrappingIndent: 'same'
         });
-        this._codeEditor = codeEditor;
+    }
+
+    async asGetCodeEditor() {
+        if (this._codeEditor) {
+            return this._codeEditor;
+        }
+        this._codeEditor = await asSingleTon('gapCoderCodeEditor-' + this.id, this, 'asCreateCodeEditor');
         return this._codeEditor;
     }
 
@@ -136,5 +135,4 @@ export class Coder {
     async asOnScroll(callback) {
         (await this.asGetCodeEditor()).onDidScrollChange(callback);
     }
-
 }

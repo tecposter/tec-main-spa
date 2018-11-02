@@ -16,13 +16,35 @@ const RouteDict = {
 };
 */
 
+const createEditor = (ctnElem, content) => {
+    const editor = new Editor(ctnElem, content);
+
+    window.on('beforeunload', evt => {
+        if (!editor.isChanged()) {
+            return;
+        }
+
+        evt.stop();
+        evt.cancel();
+        (evt || window.event).returnValue = null;
+        return null;
+    });
+
+    editor.onChange(() => {
+        document.title = '* ' + editor.getTitle();
+    });
+
+    return editor;
+};
+
 export default async core => {
     const pageElem = oneElem('.page');
     const ctnElem = createElem('div');
     pageElem.appendChild(ctnElem);
 
     const commit = core.setting.pageConfig.commit;
-    const editor = new Editor(ctnElem, commit.content);
+    const editor = createEditor(ctnElem, commit.content);
+
     const ctrlPanel = new CtrlPanel({
         menuItems: [
             {title: 'item1'},

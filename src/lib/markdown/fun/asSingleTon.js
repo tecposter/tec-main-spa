@@ -31,6 +31,9 @@ export const asSingleTon = async (key, obj, asFun) => {
     }
 
     pending[key] = true;
+
+    //console.log('async singleton', key, obj, asFun);
+
     container[key] = await obj[asFun]();
     event.trigger(key);
     return mustItem(key);
