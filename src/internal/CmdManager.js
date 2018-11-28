@@ -1,8 +1,3 @@
-const Mode = {
-    normal: 'normal',
-    edit: 'edit'
-};
-
 const KeyMap = {
     8: 'backspace',
     9: 'tab',
@@ -32,65 +27,65 @@ const KeyMap = {
     222: '\'' // single quote
 };
 
+const DocumentEvent = {
+    keydown: 'keydown'
+};
+
 export class CmdManager {
     constructor() {
-        this.mode = Mode.normal;
         this.cmds = {};
         this.shortKeys = {};
 
-        document.on('keydown', async evt => {
-            if (!this.cmds[this.mode]) {
+        document.on(DocumentEvent.keydown, async evt => {
+            if (!this.cmds) {
                 return;
             }
 
-            const shortKey = this.parseShortKey(evt);
-            const cmd = this.shortKeys[this.mode][shortKey];
-            if (!cmd) {
-                return;
-            }
-
-            const cmdObj = this.cmds[this.mode][cmd];
-            if (!cmdObj) {
+            const shortKey = this.extractShortKey(evt);
+            const cmdKey = this.shortKeys[shortKey];
+            if (!cmdKey) {
                 return;
             }
 
             evt.cancel();
             evt.stop();
-            cmdObj.fun.apply(null);
+            
+            this.trigger(cmdKey);
         });
     }
 
-    setMode(mode) {
-        this.mode = mode;
+    register(...cmds) {
+        cmds.forEach(cmd => this.addCmd(
+            cmd.key,
+            cmd.desc || '',
+            cmd.shortKeys,
+            cmd.fun
+        ));
     }
 
-    register(inCmd, inShortKeys, fun, inModes) {
-        const modes = this._argToArr(inModes || this.mode);
-        const shortKeys = this._argToArr(inShortKeys);
-        const [cmd, desc] = this._parseCmd(inCmd);
-
-        modes.forEach(mode => {
-            this.addCmd(mode, cmd, desc, fun, shortKeys);
-            shortKeys.forEach(shortKey => this.addShortKey(mode, shortKey, cmd));
-        });
-    }
-
-    trigger(cmd) {
-        const cmdSet = this.getCmdSet(this.mode);
-        if (!cmdSet.hasOwnProperty(cmd)) {
-            console.warn(`cannot find cmd: ${this.mode} - ${cmd}`); // eslint-disable-line no-console
+    trigger(cmdKey) {
+        if (!this.cmds.hasOwnProperty(cmdKey)) {
+            console.warn(`cannot find cmdKey: ${this.mode} - ${cmdKey}`); // eslint-disable-line no-console
             return;
-            //throw new Error(`Cannot find cmd: ${this.mode} - ${cmd}`);
+            //throw new Error(`Cannot find cmdKey: ${this.mode} - ${cmdKey}`);
         }
-        const cmdObj = cmdSet[cmd];
-        cmdObj.fun.apply(null);
+        const cmd = this.cmds[cmdKey];
+        cmd.fun.apply(null);
+    }
+
+    addCmd(cmdKey, cmdDesc, cmdShortKeys, cmdFun) {
+        if (this.cmds.hasOwnProperty(cmdKey)) {
+            throw new Error(`duplicated cmdKey: ${cmdKey}`);
+        }
+        this.cmds[cmdKey] = {key: cmdKey, desc: cmdDesc, shortKeys: cmdShortKeys, fun: cmdFun};
+        cmdShortKeys.split(',').forEach(shortKey => this.mapShortKey(shortKey, cmdKey));
     }
 
     //
     // ---
     //
 
-    parseShortKey(evt) {
+    extractShortKey(evt) {
         let prefixs = [];
         if (evt.ctrlKey) {
             prefixs.push('ctrl');
@@ -121,64 +116,13 @@ export class CmdManager {
         return shortKey;
     }
 
-    _argToArr(arg) {
-        let arr;
-        if (Array.isArray(arg)) {
-            arr = arg;
-        } else if (typeof arg === 'string') {
-            arr = [arg];
-        } else {
-            throw new Error('unkown format');
+    mapShortKey(shortKey, cmdKey) {
+        if (this.shortKeys.hasOwnProperty(shortKey)) {
+            throw new Error(`duplicated short key: ${shortKey}`);
         }
-        return arr;
-    }
-
-    _parseCmd(inCmd) {
-        let cmd, desc;
-        const pos = inCmd.indexOf(':');
-        if (pos > 0) {
-            cmd = inCmd.substr(0, pos);
-            desc = inCmd.substr(pos + 1).trim();
-        } else {
-            cmd = inCmd.trim();
-        }
-        return [cmd, desc];
-    }
-
-    addCmd(mode, cmd, desc, fun, shortKeys) {
-        const cmdSet = this.getCmdSet(mode);
-        if (cmdSet.hasOwnProperty(cmd)) {
-            throw new Error(`duplicated cmd: ${mode} - ${cmd}`);
-        }
-        cmdSet[cmd] = {desc, fun, shortKeys};
-    }
-
-    addShortKey(mode, shortKey, cmd) {
-        const shortKeySet = this.getShortKeySet(mode);
-        if (shortKeySet.hasOwnProperty(shortKey)) {
-            throw new Error(`duplicated short key: ${mode} - ${shortKey}`);
-        }
-        shortKeySet[shortKey] = cmd;
-    }
-
-    getCmdSet(mode) {
-        if (this.cmds[mode]) {
-            return this.cmds[mode];
-        }
-        this.cmds[mode] = {};
-        return this.cmds[mode];
-    }
-
-    getShortKeySet(mode) {
-        if (this.shortKeys[mode]) {
-            return this.shortKeys[mode];
-        }
-        this.shortKeys[mode] = {};
-        return this.shortKeys[mode];
+        this.shortKeys[shortKey] = cmdKey;
     }
 }
-
-CmdManager.Mode = Mode;
 
 // https://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
 /*

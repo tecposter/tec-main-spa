@@ -1,6 +1,6 @@
 import {Pop} from 'gap/Pop';
 
-export class CmdDialog extends Pop {
+export class CmdPop extends Pop {
     template() {
         return this.html`
         <form method="post" action="javascript:;"
@@ -30,6 +30,24 @@ export class CmdDialog extends Pop {
 
     geneCmdListTpl() {
         const cmds = this.props.cmdManager.cmds;
+        return `
+        <ul>
+        ${Object.keys(cmds).map(cmdKey => this.geneCmdItemHtml(cmds[cmdKey])).join('')}
+        </ul>
+        `;
+    }
+
+    geneCmdItemHtml(cmd) {
+        return `
+            <li>
+            ${cmd.key} [${cmd.shortKeys}]: ${cmd.desc || ''}
+            </li>
+        `;
+    }
+
+    /*
+    geneCmdListTpl() {
+        const cmds = this.props.cmdManager.cmds;
         return this.html`
         ${Object.keys(cmds).map(mode => this.geneCmdSetTpl(mode, cmds[mode]))}
         `;
@@ -54,4 +72,5 @@ export class CmdDialog extends Pop {
         </li>
         `;
     }
+    */
 }

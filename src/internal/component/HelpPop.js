@@ -1,10 +1,10 @@
 import {Pop} from 'gap/Pop';
 
-export class Helper extends Pop {
+export class HelpPop extends Pop {
     template() {
         return this.html`
-        <div class="helper ctn">
-            <h2 class="title large">Helper</h2>
+        <div class="help ctn">
+            <h2 class="title large">Help</h2>
             <div class="mode">
                 <ul>
                     <li>[esc] - esc - Close pops</li>
@@ -12,7 +12,7 @@ export class Helper extends Pop {
                     <li>[ctrl-;] - cmd - Show command dialog</li>
                 </ul>
             </div>
-        </div><!-- .helper -->
+        </div><!-- .help -->
         `;
     }
 }

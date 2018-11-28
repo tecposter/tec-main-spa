@@ -1,5 +1,9 @@
 import {Pop} from 'gap/Pop';
 
+const Event = {
+    show: 'show'
+};
+
 export class PublishPopForm extends Pop {
     template() {
         return this.html`
@@ -30,8 +34,12 @@ export class PublishPopForm extends Pop {
         `;
     }
 
+    onShow(fun) {
+        this.on(Event.show, fun);
+    }
+
     show() {
         super.show();
-        this.trigger('show');
+        this.trigger(Event.show);
     }
 }

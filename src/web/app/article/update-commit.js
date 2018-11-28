@@ -4,9 +4,9 @@ import {oneElem, createElem} from 'gap/web';
 import {Editor} from 'markdown/Editor';
 import {CmdManager} from 'CmdManager';
 
-import {Helper} from 'component/Helper';
-import {CtrlPanel} from 'component/CtrlPanel';
-import {CmdDialog} from 'component/CmdDialog';
+import {TecBtn} from 'component/TecBtn';
+import {HelpPop} from 'component/HelpPop';
+import {CmdPop} from 'component/CmdPop';
 
 import {PublishPopForm} from './popForm/PublishPopForm';
 
@@ -37,114 +37,62 @@ const createEditor = (ctnElem, content) => {
     return editor;
 };
 
-export default async core => {
-    const pageElem = oneElem('.page');
-    const ctnElem = createElem('div');
-    pageElem.appendChild(ctnElem);
+const createCtnElem = (pageElem) => {
+    const elem = createElem('div');
+    pageElem.appendChild(elem);
+    return elem;
+};
 
-    const commit = core.setting.pageConfig.commit;
-    const editor = createEditor(ctnElem, commit.content);
-
-    const ctrlPanel = new CtrlPanel({
-        menuItems: [
-            {title: 'item1'},
-            {title: 'item2'}
-        ]
-    });
-    const mask = new Mask();
-    const helper = new Helper({mask});
-    const cmdManager = new CmdManager();
-    const cmdDialog = new CmdDialog({mask, cmdManager});
+const createPublishPopForm = (mask, editor, commit) => {
     const publishPopForm = new PublishPopForm({mask});
-
-    publishPopForm.on('show', () => {
+    publishPopForm.onShow(() => {
         publishPopForm.update({
             title: editor.getTitle(),
             slug: commit.slug,
             code: commit.code
         });
     });
-
-    /*
-    publishPopForm.on('submit', async (slug, isPublic) => {
-        const res = await asArticlePublish(core, commit.code, slug, isPublic);
-        if (res && res.url) {
-            window.location.href = res.url;
-        }
-    });
-    */
-    //const publishPopForm = createPublishPopForm(mask, editor, commit, articleDto);
-
-    //editor.appendTo(pageElem);
-    ctrlPanel.appendTo(pageElem);
-
-    cmdManager.setMode(CmdManager.Mode.edit);
-    cmdManager.register(
-        'help: Show help', 'ctrl-shift-/',
-        () => helper.show()
-    );
-
-    /*
-    cmdManager.register(
-        'update: Update article commit', 'ctrl-s',
-        () => asArticleUpdateCommitContent(core, editor, commit)
-    );
-    */
-
-    cmdManager.register(
-        'esc', 'esc',
-        () => mask.hide()
-    );
-
-    cmdManager.register(
-        'cmd: Show command dialog',
-        'ctrl-;',
-        () => cmdDialog.show()
-    );
-
-    cmdManager.register(
-        'publish: Publish article',
-        'ctrl-shift-p',
-        ()  => {
-            if (editor.isChanged) {
-                alert('Please save content first');
-                return;
-            }
-            publishPopForm.show();
-        }
-    );
+    return publishPopForm;
 };
 
-/*
-const asArticleUpdateCommitContent = async (core, editor, code) => {
-    //commit.content = editor.getContent();
-    await core.apiPostJson(
-        'main',
-        RouteDict.articleUpdateCommitContent,
-        {code: code, content: editor.getContent}
+const createTecBtn = (pageElem, cmdPop) => {
+    const tecBtn = new TecBtn();
+    tecBtn.onClick(() => cmdPop.show());
+    tecBtn.appendTo(pageElem);
+    return tecBtn;
+};
+
+const showPublishPopForm = (editor, publishPopForm) => {
+    if (editor.isChanged) {
+        alert('Please save content first');
+        return;
+    }
+    publishPopForm.show();
+};
+
+
+const assign = (obj, fun) => Object.assign(obj, {fun});
+
+export default async core => {
+    const pageElem = oneElem('.page');
+    const ctnElem = createCtnElem(pageElem);
+
+    const commit = core.setting.pageConfig.commit;
+    const editor = createEditor(ctnElem, commit.content);
+
+    const cmdManager = new CmdManager();
+    const mask = new Mask();
+    const helpPop = new HelpPop({mask});
+    const cmdPop = new CmdPop({mask, cmdManager});
+    const publishPopForm = createPublishPopForm(mask, editor, commit);
+    createTecBtn(pageElem, cmdPop);
+
+
+    const cmd = core.setting.cmd;
+    cmdManager.register(
+        assign(cmd.esc, () => mask.hide()),
+        assign(cmd.cmd, () => cmdPop.show()),
+        assign(cmd.help, () => helpPop.show()),
+        assign(cmd.publish, () => showPublishPopForm(editor, publishPopForm))
     );
-    editor.saved();
 };
-
-const asArticlePublish = async (core, articleId, commitId, zcode, isPublic) => {
-    const res = await core.apiPostJson('main', 'publishArticleCommit', {
-        articleId,
-        zcode,
-        commitId,
-        isPublic
-    });
-    return res;
-};
-*/
-
-/*
-const asFetchArticleById = async (core, articleId) => {
-    const articleDto = await core.apiPostJson('main', 'fetchArticleById', {articleId});
-    return articleDto;
-};
-
-const createPublishPopForm = (mask, editor, commit, articleDto) => {
-    const popForm = new PublishPopForm({mask, editor, commit, articleDto});
-    return popForm;
-};
-*/

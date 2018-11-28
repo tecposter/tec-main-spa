@@ -2921,7 +2921,7 @@ gap-front-request@^2.0.0:
   dependencies:
     gap-front-form "^1.0.0"
 
-gap-front-view@^3.0.10:
+gap-front-view@^3.0.10, gap-front-view@^3.0.8:
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/gap-front-view/-/gap-front-view-3.0.10.tgz#b7445648a86be1dfb1c5a2168d82206c7308c2fb"
   integrity sha512-tSoRXyQvQHbXeB306y6/LchPxnBmaD0xgFZN/rp1tT+8zR7AMwgqFD6/Jpe8heqLVYa0eG7z9uwiWiLhd7GObw==
@@ -2935,6 +2935,15 @@ gap-front-web@^1.2.11, gap-front-web@^1.2.15:
   integrity sha512-CA2gdc4bzyHNnPKVE3biiQwllfBflQpaxpwnUMgMvlHNUZ89139p/84Br4yf4O2B2eaJ3kc7DI0S+xyhaorvhg==
   dependencies:
     gap-front-event "^2.0.0"
+
+gap-front-zselect@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/gap-front-zselect/-/gap-front-zselect-4.0.0.tgz#26084048cbb116363493951b06bcd47b58d627a3"
+  integrity sha512-BhISijYUWRFScewJcc7JYI90Hceq4tjfz75eMTGmdC8k4nycc8rh5hl31rgrFwdrGYf1FSm+on0XoMG7XW8saw==
+  dependencies:
+    gap-front-event "^2.0.0"
+    gap-front-view "^3.0.8"
+    gap-front-web "^1.2.11"
 
 gap-node-front@^1.1.1:
   version "1.1.1"
