@@ -1,4 +1,17 @@
 import {Pop} from 'gap/Pop';
+import 'gap/component/zselect';
+
+// ${cmd.key} [${cmd.shortKeys}]: ${cmd.desc || ''}
+
+const ZselectOpts = {
+    required: 'required',
+    name: 'cmd',
+    pattern: {
+        content: '#{key} [#{shortKeys}]: #{desc}',
+        selected: '',
+        value: '#{key}'
+    }
+};
 
 export class CmdPop extends Pop {
     template() {
@@ -8,7 +21,10 @@ export class CmdPop extends Pop {
             >
             <div class="form-content">
                 <label>
-                    <input type="text" name="cmd" value="" ref=${input => this.input = input}>
+                    <zselect
+                        props=${ZselectOpts}
+                        ref=${zselect => this.initZselect(zselect)}
+                    ></zselect>
                 </label>
                 <div class="cmd-list">
                     ${this.geneCmdListTpl()}
@@ -18,10 +34,22 @@ export class CmdPop extends Pop {
         `;
     }
 
+    initZselect(zselect) {
+        const cmds = this.getCmds();
+        const cmdArr = Object.values(cmds);
+        zselect.onQuery(query => {
+            return cmdArr.filter(item => {
+                return item.key.match(query)
+                    || item.shortKeys.match(query)
+                    || item.desc.match(query);
+            });
+        });
+        this.zselect = zselect;
+    }
+
     show() {
         super.show();
-        this.input.value = '';
-        this.input.focus();
+        this.zselect.focus();
     }
 
     onSubmit() {
@@ -29,7 +57,7 @@ export class CmdPop extends Pop {
     }
 
     geneCmdListTpl() {
-        const cmds = this.props.cmdManager.cmds;
+        const cmds = this.getCmds();
         return `
         <ul>
         ${Object.keys(cmds).map(cmdKey => this.geneCmdItemHtml(cmds[cmdKey])).join('')}
@@ -43,6 +71,10 @@ export class CmdPop extends Pop {
             ${cmd.key} [${cmd.shortKeys}]: ${cmd.desc || ''}
             </li>
         `;
+    }
+
+    getCmds() {
+        return this.props.cmdManager.cmds;
     }
 
     /*

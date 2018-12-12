@@ -10,6 +10,30 @@ import {CmdPop} from 'component/CmdPop';
 
 import {PublishPopForm} from './popForm/PublishPopForm';
 
+export default async core => {
+    const pageElem = oneElem('.page');
+    const ctnElem = createCtnElem(pageElem);
+
+    const commit = core.setting.pageConfig.commit;
+    const editor = createEditor(ctnElem, commit.content);
+
+    const cmdManager = new CmdManager();
+    const mask = new Mask();
+    const helpPop = new HelpPop({mask});
+    const cmdPop = new CmdPop({mask, cmdManager});
+    const publishPopForm = createPublishPopForm(mask, editor, commit);
+    createTecBtn(pageElem, cmdPop);
+
+
+    const cmd = core.setting.cmd;
+    cmdManager.register(
+        assign(cmd.esc, () => mask.hide()),
+        assign(cmd.cmd, () => cmdPop.show()),
+        assign(cmd.help, () => helpPop.show()),
+        assign(cmd.publish, () => showPublishPopForm(editor, publishPopForm))
+    );
+};
+
 /*
 const RouteDict = {
     articleUpdateCommitContent: 'article-update-commit-content'
@@ -72,27 +96,3 @@ const showPublishPopForm = (editor, publishPopForm) => {
 
 
 const assign = (obj, fun) => Object.assign(obj, {fun});
-
-export default async core => {
-    const pageElem = oneElem('.page');
-    const ctnElem = createCtnElem(pageElem);
-
-    const commit = core.setting.pageConfig.commit;
-    const editor = createEditor(ctnElem, commit.content);
-
-    const cmdManager = new CmdManager();
-    const mask = new Mask();
-    const helpPop = new HelpPop({mask});
-    const cmdPop = new CmdPop({mask, cmdManager});
-    const publishPopForm = createPublishPopForm(mask, editor, commit);
-    createTecBtn(pageElem, cmdPop);
-
-
-    const cmd = core.setting.cmd;
-    cmdManager.register(
-        assign(cmd.esc, () => mask.hide()),
-        assign(cmd.cmd, () => cmdPop.show()),
-        assign(cmd.help, () => helpPop.show()),
-        assign(cmd.publish, () => showPublishPopForm(editor, publishPopForm))
-    );
-};
