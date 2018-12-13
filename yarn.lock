@@ -2929,9 +2929,9 @@ gap-front-web@^1.2.11, gap-front-web@^1.2.15:
     gap-front-event "^2.0.0"
 
 gap-front-zselect@^4.0.0:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/gap-front-zselect/-/gap-front-zselect-4.0.3.tgz#a0be58707346ac1b0c9d29a171c28dbca5e56fb8"
-  integrity sha512-ErRdjSjagHJ42NbmA/LMQMwH3aKZjumlADZRD0vb2KhjmjR34L4SuWedJOsoMXIUnUZyIgZ8HB4fOixF20c+ww==
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/gap-front-zselect/-/gap-front-zselect-4.0.4.tgz#842d37bcb2431838da3db70008df3b2fdddfadd0"
+  integrity sha512-SLoo86SFKe4N88rYgXGnQ4gdk/Fikx+lkHXAXPZY5lo742r5yW28agppjdSuBUqxcKwcp1dzq56ARQw4tXB83Q==
   dependencies:
     gap-front-event "^2.0.0"
     gap-front-view "^3.0.8"

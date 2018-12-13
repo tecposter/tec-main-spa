@@ -44,16 +44,14 @@ export class CmdPop extends Pop {
                     || item.desc.match(query);
             });
         });
+        zselect.onSelect(cmd => this.getCmdManager().trigger(cmd.key));
         this.zselect = zselect;
     }
 
     show() {
         super.show();
         this.zselect.focus();
-    }
-
-    onSubmit() {
-        this.props.cmdManager.trigger(this.input.value);
+        this.zselect.clear();
     }
 
     geneCmdListTpl() {
@@ -77,7 +75,15 @@ export class CmdPop extends Pop {
         return this.props.cmdManager.cmds;
     }
 
+    getCmdManager() {
+        return this.props.cmdManager;
+    }
+
     /*
+    onSubmit() {
+        this.props.cmdManager.trigger(this.input.value);
+    }
+
     geneCmdListTpl() {
         const cmds = this.props.cmdManager.cmds;
         return this.html`
