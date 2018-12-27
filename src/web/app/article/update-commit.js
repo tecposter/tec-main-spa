@@ -9,6 +9,7 @@ import {HelpPop} from 'component/HelpPop';
 import {CmdPop} from 'component/CmdPop';
 
 import {PublishPopForm} from './popForm/PublishPopForm';
+import {ArticleCtrl} from './ctrl/ArticleCtrl';
 
 export default async core => {
     const pageElem = oneElem('.page');
@@ -21,16 +22,30 @@ export default async core => {
     const mask = new Mask();
     const helpPop = new HelpPop({mask});
     const cmdPop = new CmdPop({mask, cmdManager});
-    const publishPopForm = createPublishPopForm(mask, editor, commit);
+    const publishPopForm = new PublishPopForm({mask});
+    const articleCtrl = new ArticleCtrl(core);
+
     createTecBtn(pageElem, cmdPop);
 
+    publishPopForm.onShow(() => {
+        publishPopForm.update({
+            title: editor.getTitle(),
+            slug: commit.slug,
+            code: commit.code
+        });
+    });
+
+    publishPopForm.onSubmit((slug, isPublic) => {
+        publishArticle(articleCtrl, commit.code, slug, isPublic);
+    });
 
     const cmd = core.setting.cmd;
     cmdManager.register(
         assign(cmd.esc, () => mask.hide()),
         assign(cmd.cmd, () => cmdPop.show()),
         assign(cmd.help, () => helpPop.show()),
-        assign(cmd.publish, () => showPublishPopForm(editor, publishPopForm))
+        assign(cmd.publish, () => showPublishPopForm(editor, publishPopForm)),
+        assign(cmd.saveCommitContent, () => asSaveCommitContent(articleCtrl, editor, commit))
     );
 };
 
@@ -39,6 +54,14 @@ const RouteDict = {
     articleUpdateCommitContent: 'article-update-commit-content'
 };
 */
+
+const asSaveCommitContent = async (articleCtrl, editor, commit) => {
+    const content = editor.getContent();
+    const commitCode = commit.code;
+    await articleCtrl.asSaveCommitContent(commitCode, content);
+    document.title = editor.getTitle();
+    editor.saved();
+};
 
 const createEditor = (ctnElem, content) => {
     const editor = new Editor(ctnElem, content);
@@ -67,16 +90,9 @@ const createCtnElem = (pageElem) => {
     return elem;
 };
 
-const createPublishPopForm = (mask, editor, commit) => {
-    const publishPopForm = new PublishPopForm({mask});
-    publishPopForm.onShow(() => {
-        publishPopForm.update({
-            title: editor.getTitle(),
-            slug: commit.slug,
-            code: commit.code
-        });
-    });
-    return publishPopForm;
+const publishArticle = async (articleCtrl, code, slug, isPublic) => {
+    await articleCtrl.asPublish(code, slug, isPublic);
+    gotoArticlePage(slug);
 };
 
 const createTecBtn = (pageElem, cmdPop) => {
@@ -87,12 +103,15 @@ const createTecBtn = (pageElem, cmdPop) => {
 };
 
 const showPublishPopForm = (editor, publishPopForm) => {
-    if (editor.isChanged) {
+    if (editor.isChanged()) {
         alert('Please save content first');
         return;
     }
     publishPopForm.show();
 };
 
+const gotoArticlePage = (slug) => {
+    window.location = '/article/' + slug;
+};
 
 const assign = (obj, fun) => Object.assign(obj, {fun});

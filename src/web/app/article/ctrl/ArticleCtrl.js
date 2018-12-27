@@ -1,5 +1,5 @@
 const ArticleRouteDict = {
-    updateCommitContent: 'article-update-commit-content',
+    saveCommitContent: 'article-save-commit-content',
     publish: 'article-publish'
 };
 const AppCode = 'main';
@@ -9,19 +9,19 @@ export class ArticleCtrl {
         this.core = core;
     }
 
-    async asUpdateCommitContent(code, content) {
+    async asSaveCommitContent(code, content) {
         await this.core.apiPostJson(
             AppCode,
-            ArticleRouteDict.updateCommitContent,
+            ArticleRouteDict.saveCommitContent,
             {code, content}
         );
     }
 
-    async asPublish(code, slug) {
+    async asPublish(code, slug, isPublic) {
         return await this.core.apiPostJson(
             AppCode,
             ArticleRouteDict.publish,
-            {code, slug}
+            {code, slug, isPublic}
         );
     }
 }

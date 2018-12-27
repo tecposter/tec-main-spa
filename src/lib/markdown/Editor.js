@@ -32,6 +32,11 @@ export class Editor {
         return this._isChanged;
     }
 
+    saved() {
+        this._isChanged = false;
+        this._isPreviewBlocked = false;
+    }
+
     getTitle() {
         return this.extractTitle(this.getContent());
     }

@@ -14,6 +14,11 @@ export const cmd = {
         desc: 'Show help',
         shortKeys: 'ctrl-shift-h'
     },
+    saveCommitContent: {
+        key: 'saveCommitContent',
+        desc: 'Save commit content',
+        shortKeys: 'ctrl-s'
+    },
     publish: {
         key: 'publish',
         desc: 'Publish article',
