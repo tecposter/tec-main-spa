@@ -13,7 +13,12 @@ const webCore = new WebCore(deepMerge(
 ));
 
 ready(async () => {
-    await (await import('./app/' + window.PageConfig.load)).default(webCore);
+    const load = window.PageConfig.load;
+    if (!load) {
+        return;
+    }
+
+    await (await import('./app/' + load)).default(webCore);
 });
 
 /*
