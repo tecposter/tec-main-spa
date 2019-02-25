@@ -1,6 +1,7 @@
 import {deepMerge} from 'obj/deepMerge';
 import {WebCore} from './WebCore';
 import {CtrlPanel} from './CtrlPanel';
+import {oneElem} from 'gap/web';
 
 const _core = new WebCore();
 const _setting = {};
@@ -19,7 +20,11 @@ export const web_core = () => {
 };
 
 export const ctrl_panel = () => {
-    return new CtrlPanel(setting().cmd);
+    const panel = new CtrlPanel(setting().cmd);
+    const pageElem = oneElem('.page');
+    if (pageElem) {
+        panel.appendTo(pageElem);
+    }
 };
 /*
 import {ready} from 'gap/web';

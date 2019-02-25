@@ -14,7 +14,6 @@ export default async () => {
     const editor = createEditor(ctnElem, commit.content);
 
     const ctrlPanel = ctrl_panel();
-    ctrlPanel.appendTo(pageElem);
 
     const articleCtrl = new ArticleCtrl();
 
