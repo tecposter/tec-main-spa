@@ -1,11 +1,11 @@
-import {Pop} from 'gap/Pop';
+import {View} from 'gap/View';
 
 const Event = {
     submit: 'submit',
     show: 'show'
 };
 
-export class PublishPopForm extends Pop {
+export class PublishForm extends View {
     template() {
         return this.html`
         <form 

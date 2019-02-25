@@ -1,3 +1,5 @@
+import {web_core} from 'global';
+
 const ArticleRouteDict = {
     saveCommitContent: 'article-save-commit-content',
     publish: 'article-publish'
@@ -5,8 +7,8 @@ const ArticleRouteDict = {
 const AppCode = 'main';
 
 export class ArticleCtrl {
-    constructor(core) {
-        this.core = core;
+    constructor() {
+        this.core = web_core();
     }
 
     async asSaveCommitContent(code, content) {

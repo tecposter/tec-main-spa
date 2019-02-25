@@ -15,7 +15,7 @@ export class CtrlPanel {
         this._cmdView = this._createCmdView(this._cmdManager);
         this._cmdPop = this.createPop(this._cmdView);
 
-        this._tecBtn = this._createTecBtn(this._cmdPop, this._cmdView);
+        this._tecBtn = this._createTecBtn(this._cmdPop);
     }
 
     //
@@ -33,7 +33,14 @@ export class CtrlPanel {
 
     showCmdPop() {
         this._cmdPop.show();
-        this._cmdView.focus();
+    }
+
+    register(cmd, fun) {
+        this._cmdManager.register(assign(cmd, fun));
+    }
+
+    hide() {
+        this._mask.hideMask();
     }
 
     //
@@ -71,11 +78,10 @@ export class CtrlPanel {
         //return new CmdPop({mask, cmdManager});
     }
 
-    _createTecBtn(cmdPop, cmdView) {
+    _createTecBtn(cmdPop) {
         const tecBtn = new TecBtn();
         tecBtn.onClick(() => {
             cmdPop.show();
-            cmdView.focus();
         });
         return tecBtn;
     }

@@ -37,9 +37,9 @@ export class CmdView extends View {
      */
 
     initZselect(zselect) {
-        const cmds = this.getCmds();
-        const cmdArr = Object.values(cmds);
         zselect.onQuery(query => {
+            const cmds = this.getCmds();
+            const cmdArr = Object.values(cmds);
             return cmdArr.filter(item => {
                 return item.key.match(query)
                     || item.shortKeys.match(query)
