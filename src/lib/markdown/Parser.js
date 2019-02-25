@@ -5,7 +5,8 @@ const HighlightRes = {
     csses: ['https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css'],
     jses: [
         'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/go.min.js'
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/go.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/rust.min.js',
     ]
 };
 

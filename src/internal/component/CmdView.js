@@ -1,4 +1,4 @@
-import {Pop} from 'gap/Pop';
+import {View} from 'gap/View';
 import 'gap/component/zselect';
 
 // ${cmd.key} [${cmd.shortKeys}]: ${cmd.desc || ''}
@@ -13,7 +13,7 @@ const ZselectOpts = {
     }
 };
 
-export class CmdPop extends Pop {
+export class CmdView extends View {
     template() {
         return this.html`
         <form method="post" action="javascript:;"
@@ -26,13 +26,15 @@ export class CmdPop extends Pop {
                         ref=${zselect => this.initZselect(zselect)}
                     ></zselect>
                 </label>
-                <div class="cmd-list">
-                    ${this.geneCmdListTpl()}
-                </div>
             </div><!-- .form-content -->
         </form>
         `;
     }
+    /*
+                <div class="cmd-list">
+                    ${this.geneCmdListTpl()}
+                </div>
+     */
 
     initZselect(zselect) {
         const cmds = this.getCmds();
@@ -48,8 +50,8 @@ export class CmdPop extends Pop {
         this.zselect = zselect;
     }
 
-    show() {
-        super.show();
+    focus() {
+        //super.show();
         this.zselect.focus();
         this.zselect.clear();
     }

@@ -1,16 +1,21 @@
 import {ready} from 'gap/web';
-import {deepMerge} from 'obj/deepMerge';
-import {WebCore} from 'WebCore';
+//import {deepMerge} from 'obj/deepMerge';
+//import {WebCore} from 'WebCore';
+import {bootstrap} from 'global';
 import {setting} from './setting/setting';
 import {cmd} from './cmd/cmd';
 import {localSetting} from './setting/setting.local';
 
+/*
 const webCore = new WebCore(deepMerge(
     setting,
     localSetting,
     {pageConfig: window.PageConfig},
     {cmd}
 ));
+*/
+
+bootstrap(setting, localSetting, {pageConfig: window.PageConfig}, {cmd});
 
 ready(async () => {
     const load = window.PageConfig.load;
@@ -18,7 +23,7 @@ ready(async () => {
         return;
     }
 
-    await (await import('./app/' + load)).default(webCore);
+    await (await import('./app/' + load)).default();
 });
 
 /*

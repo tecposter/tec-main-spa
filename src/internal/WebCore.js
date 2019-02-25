@@ -6,9 +6,12 @@ const RouteDict = {
 };
 
 export class WebCore {
-    constructor(setting) {
-        this.setting = setting;
+    constructor() {
         this.cache = new SessionStorage();
+    }
+
+    init(setting) {
+        this.setting = setting;
     }
 
     async apiPostJson(appCode, routeName, params) {
