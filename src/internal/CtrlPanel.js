@@ -1,3 +1,5 @@
+import {web_core} from './global';
+
 import {Mask} from 'gap/Mask';
 
 import {CmdManager} from 'CmdManager';
@@ -47,6 +49,18 @@ export class CtrlPanel {
         this.gotoLocation('/');
     }
 
+    gotoLogin() {
+        this.gotoLocation(`//i.${this.getBaseHost()}/login`);
+    }
+
+    gotoLogout() {
+        this.gotoLocation(`//i.${this.getBaseHost()}/logout`);
+    }
+
+    getBaseHost() {
+        return web_core().setting.baseHost;
+    }
+
     gotoLocation(url) {
         window.location = url;
     }
@@ -62,6 +76,15 @@ export class CtrlPanel {
             assign(cmd.cmd, () => this.showCmdPop()),
             assign(cmd.home, () => this.gotoHome())
         );
+        if (web_core().isLogined()) {
+            cmdManager.register(
+                assign(cmd.logout, () => this.gotoLogout())
+            );
+        } else {
+            cmdManager.register(
+                assign(cmd.login, () => this.gotoLogin())
+            );
+        }
         return cmdManager;
     }
     /*

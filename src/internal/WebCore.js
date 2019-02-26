@@ -14,6 +14,10 @@ export class WebCore {
         this.setting = setting;
     }
 
+    isLogined() {
+        return document.cookie.split(';').filter((item) => item.trim().startsWith('logined=true')).length === 1;
+    }
+
     async apiPostJson(appCode, routeName, params) {
         const url = await this.asGetUrl(appCode, routeName);
         const accessToken = await this.asGetAccessToken(appCode);

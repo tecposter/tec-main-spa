@@ -14,6 +14,14 @@ export const cmd = {
         desc: 'Show command list',
         shortKeys: 'ctrl-;'
     },
+    login: {
+        key: 'login',
+        desc: 'Login',
+    },
+    logout: {
+        key: 'logout',
+        desc: 'Logout'
+    },
     help: {
         key: 'help',
         desc: 'Show help',
