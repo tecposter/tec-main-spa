@@ -25,6 +25,7 @@ export const ctrl_panel = () => {
     if (pageElem) {
         panel.appendTo(pageElem);
     }
+    return panel;
 };
 /*
 import {ready} from 'gap/web';
