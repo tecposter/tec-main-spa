@@ -77,8 +77,10 @@ export class CmdManager {
         if (this.cmds.hasOwnProperty(cmdKey)) {
             throw new Error(`duplicated cmdKey: ${cmdKey}`);
         }
-        this.cmds[cmdKey] = {key: cmdKey, desc: cmdDesc, shortKeys: cmdShortKeys, fun: cmdFun};
-        cmdShortKeys.split(',').forEach(shortKey => this.mapShortKey(shortKey, cmdKey));
+        this.cmds[cmdKey] = {key: cmdKey, desc: cmdDesc, shortKeys: cmdShortKeys || '', fun: cmdFun};
+        if (cmdShortKeys) {
+            cmdShortKeys.split(',').forEach(shortKey => this.mapShortKey(shortKey, cmdKey));
+        }
     }
 
     //
