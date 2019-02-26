@@ -1,8 +1,13 @@
 export const cmd = {
     esc: {
         key: 'esc',
-        desc: '',
+        desc: 'Quit control panel',
         shortKeys: 'esc'
+    },
+    home: {
+        key: 'home',
+        desc: 'Goto home page',
+        shortKeys: 'ctrl-shift-h'
     },
     cmd: {
         key: 'cmd',

@@ -43,6 +43,14 @@ export class CtrlPanel {
         this._mask.hideMask();
     }
 
+    gotoHome() {
+        this.gotoLocation('/');
+    }
+
+    gotoLocation(url) {
+        window.location = url;
+    }
+
     //
     // Private methods
     //
@@ -51,7 +59,8 @@ export class CtrlPanel {
 
         cmdManager.register(
             assign(cmd.esc, () => this._mask.hide()),
-            assign(cmd.cmd, () => this.showCmdPop())
+            assign(cmd.cmd, () => this.showCmdPop()),
+            assign(cmd.home, () => this.gotoHome())
         );
         return cmdManager;
     }
