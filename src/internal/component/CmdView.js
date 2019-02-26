@@ -37,13 +37,17 @@ export class CmdView extends View {
      */
 
     initZselect(zselect) {
+
         zselect.onQuery(query => {
             const cmds = this.getCmds();
             const cmdArr = Object.values(cmds);
+
+            query = query.replace(/\\/g, '\\\\').toLowerCase();
+
             return cmdArr.filter(item => {
-                return item.key.match(query)
-                    || item.shortKeys.match(query)
-                    || item.desc.match(query);
+                return item.key.toLowerCase().match(query)
+                    || item.shortKeys.toLowerCase().match(query)
+                    || item.desc.toLowerCase().match(query);
             });
         });
         zselect.onSelect(cmd => this.getCmdManager().trigger(cmd.key));
