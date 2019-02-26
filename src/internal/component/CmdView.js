@@ -16,7 +16,7 @@ const ZselectOpts = {
 export class CmdView extends View {
     template() {
         return this.html`
-        <form method="post" action="javascript:;"
+        <form class="cmd" method="post" action="javascript:;"
             on-submit=${() => this.onSubmit()}
             >
             <div class="form-content">
