@@ -42,6 +42,7 @@ export default async () => {
         editor.saved();
         ctrlPanel.hide();
     });
+    ctrlPanel.register(cmd.draft, () => ctrlPanel.gotoDraft());
 };
 
 const createEditor = (ctnElem, content) => {
