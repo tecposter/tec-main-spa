@@ -2,8 +2,15 @@ import {Request as GapRequest} from 'gap/Request';
 import {SessionStorage} from 'storage/SessionStorage';
 
 const RouteDict = {
-    identityAccess: 'identity-access'
+    identityAccess: 'identity-access',
+    refreshIdToken: 'refresh-id-token',
+    refreshAccessToken: 'refresh-access-token'
 };
+
+const AccessTokenTtl = 3 * 60 * 60 * 1000; // 3 hour
+const IdTokenTtl = 12 * 60 * 60 * 1000; // 12 hour
+const AccessTokenCachePre = 'access-token-';
+const DefaultAppCode = 'main';
 
 export class WebCore {
     constructor() {
@@ -12,27 +19,93 @@ export class WebCore {
 
     init(setting) {
         this.setting = setting;
+        this.asAutoRefreshIdToken();
     }
 
     isLogined() {
         return document.cookie.split(';').filter((item) => item.trim().startsWith('logined=true')).length === 1;
     }
 
-    async apiPostJson(appCode, routeName, params) {
-        const url = await this.asGetUrl(appCode, routeName);
-        const accessToken = await this.asGetAccessToken(appCode);
-        if (!accessToken) {
-            throw new Error('cannot get accessToken:' + accessToken);
-        }
+    async asAutoRefreshIdToken() {
+        const idTokenRefreshedKey = 'id-token-refreshed';
+        const idTokenRefreshed = this.cache.get(idTokenRefreshedKey);
 
-        // new instance every time ?
-        const request = this.createAppRequest();
-        request.addHeader('Authorization', 'Bearer ' + accessToken.token);
-        return request.postJson(url, params);
+        if (!idTokenRefreshed) {
+            if (this.isLogined()) {
+                const refreshed = (new Date()).getTime();
+                this.cache.set(idTokenRefreshedKey, refreshed);
+            }
+            return;
+        }
+        const now = (new Date()).getTime();
+        if ((now - idTokenRefreshed) > IdTokenTtl) {
+            if (await this.asRefreshIdToken()) {
+                this.cache.set(idTokenRefreshedKey, now);
+            }
+        }
     }
 
+    async asAutoRefreshAccessToken(appCode) {
+        const refreshedKey = 'access-token-refreshed-' + appCode;
+        const cacheKey = AccessTokenCachePre + appCode;
+        const refreshed = this.cache.get(refreshedKey);
+
+        if (!refreshed) {
+            if (this.cache.get(cacheKey)) {
+                this.cache.set(refreshedKey, (new Date()).getTime());
+            }
+            return;
+        }
+
+        const now = (new Date()).getTime();
+        if ((now - refreshed) > AccessTokenTtl) {
+            if (await this.asRefreshAccessToken(appCode)) {
+                this.cache.set(refreshed, now);
+            }
+        }
+    }
+
+    async asRefreshIdToken() {
+        const url = await this.asGetUrl(DefaultAppCode, RouteDict.refreshIdToken);
+        const request = this.createAppRequest();
+        request.withCredentials = true;
+        try {
+            await request.postJson(url);
+            return true;
+        } catch(e) {
+            throw e;
+        }
+    }
+
+    async asRefreshAccessToken(appCode) {
+        const cacheKey = AccessTokenCachePre + appCode;
+        const cachedAccessToken = this.cache.get(cacheKey);
+        if (!cachedAccessToken) {
+            throw new Error('cannot get cached access token');
+        }
+
+        const url = await this.asGetUrl(appCode, RouteDict.refreshAccessToken);
+        const request = this.createAppRequest();
+        request.withCredentials = true;
+        request.addHeader('Authorization', 'Bearer ' + cachedAccessToken.token);
+        try {
+            const remoteAccessToken = await request.postJson(url, {
+                refresh: cachedAccessToken.refresh
+            });
+            this.cache.set(cacheKey, remoteAccessToken);
+            return true;
+        } catch(e) {
+            this.cache.remove(cacheKey);
+            throw e;
+        }
+    }
+
+
     async asGetAccessToken(appCode) {
-        const cacheKey = 'access-token-' + appCode;
+        await this.asAutoRefreshIdToken();
+        await this.asAutoRefreshAccessToken(appCode);
+
+        const cacheKey = AccessTokenCachePre + appCode;
         const cachedAccessToken = this.cache.get(cacheKey);
         if (cachedAccessToken) {
             return cachedAccessToken;
@@ -45,6 +118,21 @@ export class WebCore {
         const remoteAccessToken = await request.postJson(identityAccessUrl);
         this.cache.set(cacheKey, remoteAccessToken);
         return remoteAccessToken;
+    }
+
+
+    async apiPostJson(appCode, routeName, params) {
+
+        const url = await this.asGetUrl(appCode, routeName);
+        const accessToken = await this.asGetAccessToken(appCode);
+        if (!accessToken) {
+            throw new Error('cannot get accessToken:' + accessToken);
+        }
+
+        // new instance every time ?
+        const request = this.createAppRequest();
+        request.addHeader('Authorization', 'Bearer ' + accessToken.token);
+        return request.postJson(url, params);
     }
 
     async asGetUrl(appCode, routeName) {
