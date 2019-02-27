@@ -4,15 +4,15 @@ export const cmd = {
         desc: 'Quit control panel',
         shortKeys: 'esc'
     },
+    cmd: {
+        key: 'cmd',
+        desc: 'Open control panel',
+        shortKeys: 'ctrl-;'
+    },
     home: {
         key: 'home',
         desc: 'Goto home page',
         shortKeys: 'ctrl-shift-h'
-    },
-    cmd: {
-        key: 'cmd',
-        desc: 'Show command list',
-        shortKeys: 'ctrl-;'
     },
     login: {
         key: 'login',
@@ -40,5 +40,20 @@ export const cmd = {
     draft: {
         key: 'draft',
         desc: 'Draft'
+    },
+    next: {
+        key: 'nextItem',
+        desc: 'Next Item',
+        shortKeys: 'j'
+    },
+    prev: {
+        key: 'prevItem',
+        desc: 'Previous Item',
+        shortKeys: 'k'
+    },
+    select: {
+        key: 'select',
+        desc: 'Select item',
+        shortKeys: 'enter'
     }
 };
