@@ -6,8 +6,9 @@ import 'gap/component/zselect';
 const ZselectOpts = {
     required: 'required',
     name: 'cmd',
+    placeholder: 'ctrl-j: next; ctrl-k: prev; enter: select', // todo
     pattern: {
-        content: '#{desc} - #{key} [#{shortKeys}]',
+        content: '#{desc} - #{key} (#{shortKeys})',
         selected: '',
         value: '#{key}'
     }
@@ -50,6 +51,8 @@ export class CmdView extends View {
                     || item.desc.toLowerCase().match(query);
             });
         });
+        // todo
+        //zselect.update({placeholder: ZselectOpts.placeholder});
         zselect.onSelect(cmd => this.getCmdManager().trigger(cmd.key));
         this.zselect = zselect;
     }
