@@ -36,5 +36,9 @@ export const cmd = {
         key: 'publish',
         desc: 'Publish article',
         shortKeys: 'ctrl-shift-p'
+    },
+    draft: {
+        key: 'draft',
+        desc: 'Draft'
     }
 };

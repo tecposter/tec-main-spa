@@ -49,6 +49,10 @@ export class CtrlPanel {
         this.gotoLocation('/');
     }
 
+    gotoDraft() {
+        this.gotoLocation(`//i.${this.getBaseHost()}/draft`);
+    }
+
     gotoLogin() {
         this.gotoLocation(`//i.${this.getBaseHost()}/login`);
     }

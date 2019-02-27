@@ -1,6 +1,11 @@
-import {ctrl_panel} from 'global';
+import {setting, web_core, ctrl_panel} from 'global';
 
 export default async () => {
-    ctrl_panel();
-    //console.log(web_core().isLogined());
+    const ctrlPanel = ctrl_panel();
+    if (web_core().isLogined()) {
+        const cmd = setting().cmd;
+        ctrlPanel.register(cmd.draft, () => {
+            ctrlPanel.gotoDraft();
+        });
+    }
 };
