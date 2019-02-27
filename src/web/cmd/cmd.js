@@ -1,7 +1,7 @@
 export const cmd = {
     esc: {
         key: 'esc',
-        desc: 'Quit control panel',
+        desc: 'Close control panel',
         shortKeys: 'esc'
     },
     cmd: {
@@ -55,5 +55,14 @@ export const cmd = {
         key: 'select',
         desc: 'Select item',
         shortKeys: 'enter'
+    },
+    editArticle: {
+        key: 'editArticle',
+        desc: 'Edit Article',
+        shortKeys: 'ctrl-shift-e'
+    },
+    showArticle: {
+        key: 'showArticle',
+        desc: 'Show Article',
     }
 };

@@ -43,6 +43,11 @@ export default async () => {
         ctrlPanel.hide();
     });
     ctrlPanel.register(cmd.draft, () => ctrlPanel.gotoDraft());
+    ctrlPanel.register(cmd.showArticle, () => gotoShowArticle(commit.slug));
+};
+
+const gotoShowArticle = (slug) => {
+    window.location = '/article/' + slug;
 };
 
 const createEditor = (ctnElem, content) => {
