@@ -50,7 +50,7 @@ export class CtrlPanel {
     }
 
     gotoDraft() {
-        this.gotoLocation(`//i.${this.getBaseHost()}/draft`);
+        this.gotoLocation('/draft');
     }
 
     gotoLogin() {
