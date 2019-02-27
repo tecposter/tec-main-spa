@@ -7,7 +7,7 @@ const ZselectOpts = {
     required: 'required',
     name: 'cmd',
     pattern: {
-        content: '#{key} [#{shortKeys}]: #{desc}',
+        content: '#{desc} - #{key} [#{shortKeys}]',
         selected: '',
         value: '#{key}'
     }
