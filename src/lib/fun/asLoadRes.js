@@ -1,5 +1,5 @@
-import {asLoadJs} from 'html/asLoadJs';
-import {loadCss} from 'html/loadCss';
+import {asLoadJs} from './asLoadJs';
+import {loadCss} from './loadCss';
 
 const funs = [];
 let isLocked = false;

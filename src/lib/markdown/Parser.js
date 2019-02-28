@@ -1,5 +1,5 @@
-import {asLoadRes} from './fun/asLoadRes';
-import {asSingle} from './fun/asSingle';
+import {asLoadRes} from './../fun/asLoadRes';
+import {asSingle} from './../fun/asSingle';
 
 const HighlightRes = {
     csses: ['https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css'],
