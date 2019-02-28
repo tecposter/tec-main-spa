@@ -1,5 +1,5 @@
 import {asLoadRes} from './fun/asLoadRes';
-import {asSingleTon} from './fun/asSingleTon';
+import {asOnce} from './fun/asOnce';
 
 const HighlightRes = {
     csses: ['https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css'],
@@ -120,7 +120,7 @@ export class Parser {
         if (this._mdit) {
             return this._mdit;
         }
-        this._mdit = await asSingleTon('gapParserMdit-' + this.id, this, 'asCreateMdit');
+        this._mdit = await asOnce('gapParserMdit-' + this.id, () => this.asCreateMdit());
         return this._mdit;
     }
 
@@ -130,7 +130,7 @@ export class Parser {
     }
 
     async asGetMarkdownIt() {
-        return await asSingleTon('gapParserMarkdownIt', this, 'asCreateMarkdownIt');
+        return await asOnce('gapParserMarkdownIt', () => this.asCreateMarkdownIt());
     }
 
     async asCreateHljs() {
@@ -139,7 +139,7 @@ export class Parser {
     }
 
     async asGetHljs() {
-        return await asSingleTon('gapParserHljs', this, 'asCreateHljs');
+        return await asOnce('gapParserHljs', () => this.asCreateHljs());
     }
 
     async asCreateKatex() {
@@ -151,7 +151,7 @@ export class Parser {
         if (this._katex) {
             return this._katex;
         }
-        this._katex = await asSingleTon('gapParserKatex', this, 'asCreateKatex');
+        this._katex = await asOnce('gapParserKatex', () => this.asCreateKatex());
         return this._katex;
     }
 
