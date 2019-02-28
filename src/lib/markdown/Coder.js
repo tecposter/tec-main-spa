@@ -1,6 +1,6 @@
 import {asLoadJs} from 'html/asLoadJs';
 import {asLoadRes} from './fun/asLoadRes';
-import {asOnce} from './fun/asOnce';
+import {asSingle} from './fun/asSingle';
 import {createElem} from 'gap/web';
 
 const DefaultContent = '# TecPoster Markdown Editor';
@@ -89,7 +89,7 @@ export class Coder {
         if (this._codeEditor) {
             return this._codeEditor;
         }
-        this._codeEditor = await asOnce('gapCoderCodeEditor-' + this.id, async () => this.asCreateCodeEditor());
+        this._codeEditor = await asSingle('gapCoderCodeEditor-' + this.id, async () => this.asCreateCodeEditor());
         return this._codeEditor;
     }
 
@@ -116,7 +116,7 @@ export class Coder {
     }
     
     async asGetMonaco() {
-        return await asOnce('gapCoderMonaco', async () => this.asCreateMonaco());
+        return await asSingle('gapCoderMonaco', async () => this.asCreateMonaco());
     }
 
     async asLoadRes(res) {

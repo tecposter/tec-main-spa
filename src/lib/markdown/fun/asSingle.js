@@ -12,15 +12,15 @@ const asPend = (key) => {
 
 const mustItem = (key) => {
     if (container[key]) {
-        //console.log('asOnce:', key, 'end');
+        //console.log('asSingle:', key, 'end');
         return container[key];
     }
 
     throw new Error(`cannot get async singleton of "${key}"`);
 };
 
-export const asOnce = async (key, asFun) => {
-    //console.log('asOnce:', key, 'start');
+export const asSingle = async (key, asFun) => {
+    //console.log('asSingle:', key, 'start');
     if (container[key]) {
         return mustItem(key);
     }
