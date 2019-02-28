@@ -64,5 +64,10 @@ export const cmd = {
     showArticle: {
         key: 'showArticle',
         desc: 'Show Article',
+    },
+    createArticle: {
+        key: 'createArticle',
+        desc: 'Create Article',
+        shortKeys: 'ctrl-shift-n'
     }
 };

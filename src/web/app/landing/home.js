@@ -10,5 +10,10 @@ export default async () => {
 
     if (web_core().isLogined()) {
         ctrlPanel.register(cmd.draft, () => ctrlPanel.gotoDraft());
+        ctrlPanel.register(cmd.createArticle, () => createArticle());
     }
+};
+
+const createArticle = () => {
+    window.location = '/article-req-creating';
 };
