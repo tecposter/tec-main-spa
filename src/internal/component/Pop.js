@@ -4,10 +4,14 @@ import {GapEvent} from 'gap/GapEvent';
 let popId = 0;
 
 export class Pop {
-    constructor(mask) {
+    constructor(mask, opts) {
         this._popId = 'pop' + popId++;
         this._mask = mask;
         this._ctn = createElem('div');
+        if (opts && opts.type) {
+            this._ctn.addClass(opts.type);
+        }
+
         this._mask.addPop(this._popId, this._ctn);
         this._views = [];
 

@@ -27,8 +27,8 @@ export class CtrlPanel {
         this._tecBtn.appendTo(ctn);
     }
 
-    createPop(view) {
-        const pop = new Pop(this._mask);
+    createPop(view, opts) {
+        const pop = new Pop(this._mask, opts);
         pop.appendView(view);
         return pop;
     }

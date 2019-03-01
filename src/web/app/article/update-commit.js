@@ -48,7 +48,7 @@ export default async () => {
     const codeModel = await editor.asGetCodeModel();
     const monaco = await asMonaco();
     const diffView = new DiffView(monaco, codeModel);
-    const diffPop = ctrlPanel.createPop(diffView);
+    const diffPop = ctrlPanel.createPop(diffView, {type: 'broad'});
     ctrlPanel.register(
         {key: 'diff', desc: 'Diff'},
         () => {
