@@ -26,6 +26,11 @@ export class DiffView {
         this.isInited = false;
     }
 
+    showDiff() {
+        const selectedItem = this.ctn.oneElem('.item.selected');
+        this.triggerChange(selectedItem.getAttribute('data-key'));
+    }
+
     switchItem(item) {
         this.ctn.allElem('.item.selected').forEach(item => item.removeClass('selected'));
         item.addClass('selected');

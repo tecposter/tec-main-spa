@@ -53,7 +53,8 @@ export default async () => {
         {key: 'diff', desc: 'Diff'},
         () => {
             diffPop.show();
-            diffView.diff(localOri);
+            diffView.showDiff();
+            //diffView.diff(localOri);
         }
     );
     diffView.onChange(async key => {
