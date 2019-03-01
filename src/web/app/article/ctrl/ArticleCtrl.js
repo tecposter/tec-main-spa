@@ -29,7 +29,7 @@ export class ArticleCtrl {
     }
 
     async asFetchReleasedContent(slug) {
-        const res = await this.core.apiPostJson(
+        const res = await this.core.openPostJson(
             AppCode,
             ArticleRouteDict.fetchReleasedContent,
             {slug}

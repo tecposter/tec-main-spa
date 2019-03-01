@@ -135,6 +135,12 @@ export class WebCore {
         return request.postJson(url, params);
     }
 
+    async openPostJson(appCode, routeName, params) {
+        const url = await this.asGetUrl(appCode, routeName);
+        const request = this.createAppRequest();
+        return request.postJson(url, params);
+    }
+
     async asGetUrl(appCode, routeName) {
         const appSetting = await this.asGetAppSetting(appCode);
         return this.generateUrl(appSetting, routeName);
