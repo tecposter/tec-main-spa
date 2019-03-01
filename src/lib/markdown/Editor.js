@@ -45,6 +45,10 @@ export class Editor {
         return this.coder.getContent();
     }
 
+    async asGetCodeModel() {
+        return await this.coder.asGetCodeModel();
+    }
+
     //
     // private funs
     //

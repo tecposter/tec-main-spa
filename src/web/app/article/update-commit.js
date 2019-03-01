@@ -3,6 +3,8 @@ import {oneElem, createElem} from 'gap/web';
 import {Editor} from 'markdown/Editor';
 import {ArticleCtrl} from './ctrl/ArticleCtrl';
 import {PublishForm} from './form/PublishForm';
+import {asMonaco} from 'monaco/asMonaco';
+import {DiffView} from './view/DiffView';
 
 export default async () => {
     const pageElem = oneElem('.page');
@@ -10,11 +12,9 @@ export default async () => {
     pageElem.appendChild(ctnElem);
 
     const commit = setting().pageConfig.commit;
-
+    const localOri = commit.content;
     const editor = createEditor(ctnElem, commit.content);
-
     const ctrlPanel = ctrl_panel();
-
     const articleCtrl = new ArticleCtrl();
 
     const publishForm = new PublishForm();
@@ -44,6 +44,18 @@ export default async () => {
     });
     ctrlPanel.register(cmd.draft, () => ctrlPanel.gotoDraft());
     ctrlPanel.register(cmd.showArticle, () => gotoShowArticle(commit.slug));
+
+    const codeModel = await editor.asGetCodeModel();
+    const monaco = await asMonaco();
+    const diffView = new DiffView(monaco, codeModel);
+    const diffPop = ctrlPanel.createPop(diffView);
+    ctrlPanel.register(
+        {key: 'diff', desc: 'Diff'},
+        () => {
+            diffPop.show();
+            diffView.diff(localOri);
+        }
+    );
 };
 
 const gotoShowArticle = (slug) => {

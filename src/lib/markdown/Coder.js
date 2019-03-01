@@ -27,6 +27,10 @@ export class Coder {
         return codeEditor ? codeEditor.getValue() : '';
     }
 
+    async asGetCodeModel() {
+        return (await this.asGetCodeEditor()).getModel();
+    }
+
     getLineCount() {
         const monaco = this.getCodeEditor();
         if (!monaco) {
