@@ -5,6 +5,14 @@ export class DiffView {
         this.monaco = monaco;
 
         this.ctn = createElem('div');
+        this.ctn.html`
+            <div class="diff-top">
+                <a class="item selected" href="javascript:;">Remote Draft</a>
+                <a class="item" href="javascript:;">Released Article</a>
+            </div>
+            <div class="diff-main"></div>
+        `;
+
         this.ctn.addClass('diff');
         this.localModel = localModel;
 
@@ -13,7 +21,7 @@ export class DiffView {
 
     init() {
         this.remoteModel = this.monaco.editor.createModel('original', 'markdown');
-        this.diffEditor = this.monaco.editor.createDiffEditor(this.ctn);
+        this.diffEditor = this.monaco.editor.createDiffEditor(this.ctn.oneElem('.diff-main'));
         this.diffEditor.setModel({
             original: this.remoteModel,
             modified: this.localModel
