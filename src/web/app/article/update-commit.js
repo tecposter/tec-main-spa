@@ -56,6 +56,22 @@ export default async () => {
             diffView.diff(localOri);
         }
     );
+    diffView.onChange(async key => {
+        if (key === 'remote-draft') {
+            diffView.diff(localOri);
+        } else if (key === 'released-article') {
+            diffView.diff(await asGetReleasedContent());
+        }
+    });
+
+    let releasedContent = null;
+    const asGetReleasedContent = async () => {
+        if (releasedContent !== null) {
+            return releasedContent;
+        }
+        releasedContent = await articleCtrl.asFetchReleasedContent(commit.slug);
+        return releasedContent;
+    };
 };
 
 const gotoShowArticle = (slug) => {

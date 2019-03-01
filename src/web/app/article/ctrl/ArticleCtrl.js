@@ -2,7 +2,8 @@ import {web_core} from 'global';
 
 const ArticleRouteDict = {
     saveCommitContent: 'article-save-commit-content',
-    publish: 'article-publish'
+    publish: 'article-publish',
+    fetchReleasedContent: 'article-fetch-released-content'
 };
 const AppCode = 'main';
 
@@ -25,5 +26,17 @@ export class ArticleCtrl {
             ArticleRouteDict.publish,
             {code, slug, isPublic}
         );
+    }
+
+    async asFetchReleasedContent(slug) {
+        const res = await this.core.apiPostJson(
+            AppCode,
+            ArticleRouteDict.fetchReleasedContent,
+            {slug}
+        );
+        if (res && res.content) {
+            return res.content;
+        }
+        throw new Error('Cannot fetch released content');
     }
 }

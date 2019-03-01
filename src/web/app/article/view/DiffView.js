@@ -7,8 +7,8 @@ export class DiffView {
         this.ctn = createElem('div');
         this.ctn.html`
             <div class="diff-top">
-                <a class="item selected" href="javascript:;">Remote Draft</a>
-                <a class="item" href="javascript:;">Released Article</a>
+                <a data-key="remote-draft" class="item selected" href="javascript:;">Remote Draft</a>
+                <a data-key="released-article" class="item" href="javascript:;">Released Article</a>
             </div>
             <div class="diff-main"></div>
         `;
@@ -16,7 +16,29 @@ export class DiffView {
         this.ctn.addClass('diff');
         this.localModel = localModel;
 
+        this.ctn.allElem('.item').forEach(item => {
+            item.on('click', () => {
+                this.switchItem(item);
+                this.triggerChange(item.getAttribute('data-key'));
+            });
+        });
+
         this.isInited = false;
+    }
+
+    switchItem(item) {
+        this.ctn.allElem('.item.selected').forEach(item => item.removeClass('selected'));
+        item.addClass('selected');
+    }
+
+    triggerChange(key) {
+        if (this.handleChange) {
+            this.handleChange(key);
+        }
+    }
+
+    onChange(fun) {
+        this.handleChange = fun;
     }
 
     init() {
