@@ -1,6 +1,6 @@
 import {oneElem} from 'gap/web';
 import {Parser} from 'markdown/Parser';
-import {ctrl_panel, setting} from 'global';
+import {web_core, ctrl_panel, setting} from 'global';
 
 export default async () => {
     const ctrlPanel = ctrl_panel();
@@ -8,9 +8,11 @@ export default async () => {
     const parser = new Parser();
     parser.asRenderElem(oneElem('.article-detail')); 
 
-    const cmd = setting().cmd;
-    const slug = setting().pageConfig.slug;
-    ctrlPanel.register(cmd.editArticle, () => gotoReqUpdate(slug));
+    if (web_core().isLogined()) {
+        const cmd = setting().cmd;
+        const slug = setting().pageConfig.slug;
+        ctrlPanel.register(cmd.editArticle, () => gotoReqUpdate(slug));
+    }
 };
 
 const gotoReqUpdate = (slug) => {

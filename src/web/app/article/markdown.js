@@ -25,7 +25,7 @@ export default async () => {
     const diffView = new DiffView(monaco, codeModel);
     const diffPop = ctrlPanel.createPop(diffView, {type: 'broad'});
     ctrlPanel.register(
-        {key: 'diff', desc: 'Diff'},
+        cmd.diff,
         () => {
             diffPop.show();
             diffView.showDiff();

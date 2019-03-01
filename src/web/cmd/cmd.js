@@ -69,5 +69,10 @@ export const cmd = {
         key: 'createArticle',
         desc: 'Create Article',
         shortKeys: 'ctrl-shift-n'
+    },
+    diff: {
+        key: 'diff',
+        desc: 'Diff',
+        shortKeys: 'ctrl-shift-d'
     }
 };
