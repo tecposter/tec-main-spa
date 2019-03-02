@@ -48,7 +48,15 @@ export class DiffView {
 
     init() {
         this.remoteModel = this.monaco.editor.createModel('original', 'markdown');
-        this.diffEditor = this.monaco.editor.createDiffEditor(this.ctn.oneElem('.diff-main'));
+        this.diffEditor = this.monaco.editor.createDiffEditor(
+            this.ctn.oneElem('.diff-main'),
+            {
+                wordWrap: 'wordWrapColumn',
+                wordWrapColumn: 84,
+                wordWrapMinified: true,
+                wrappingIndent: 'same'
+            }
+        );
         this.diffEditor.setModel({
             original: this.remoteModel,
             modified: this.localModel
