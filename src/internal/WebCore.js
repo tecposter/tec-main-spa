@@ -103,11 +103,12 @@ export class WebCore {
 
     async asGetAccessToken(appCode) {
         await this.asAutoRefreshIdToken();
-        await this.asAutoRefreshAccessToken(appCode);
 
         const cacheKey = AccessTokenCachePre + appCode;
         const cachedAccessToken = this.cache.get(cacheKey);
-        if (cachedAccessToken) {
+
+        if (cachedAccessToken && !this.isExpired(cachedAccessToken)) {
+            await this.asAutoRefreshAccessToken(appCode);
             return cachedAccessToken;
         }
         
@@ -118,6 +119,10 @@ export class WebCore {
         const remoteAccessToken = await request.postJson(identityAccessUrl);
         this.cache.set(cacheKey, remoteAccessToken);
         return remoteAccessToken;
+    }
+
+    isExpired(accessToken) {
+        return (new Date()).getTime() > (new Date(accessToken.expired)).getTime();
     }
 
 
