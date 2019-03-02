@@ -36,7 +36,7 @@ export class Coder {
         if (!monaco) {
             return 0;
         }
-        return monaco.viewModel.lines.lines.length;
+        return monaco.getModel().getLineCount();
     }
 
     getVisibleRange() {
