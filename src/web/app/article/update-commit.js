@@ -73,6 +73,14 @@ export default async () => {
         releasedContent = await articleCtrl.asFetchReleasedContent(commit.slug);
         return releasedContent;
     };
+
+    ctrlPanel.register(
+        {key: 'deleteDraft', desc: 'Delete Draft'},
+        () => {
+            window.location = '/article-delete-draft/' + commit.slug;
+            return;
+        }
+    );
 };
 
 const gotoShowArticle = (slug) => {
